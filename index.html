@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config={
+        darkMode:"class" //class vagy média
+    }
+</script>
+</head>
+<body class="bg-purple-50 dark:bg-[url(car.png)] bg-cover bg-center transition">
+    <button class="absolute top-1 right-1 bg-purple-300 transition dark:bg-purple-400 h-[50px] w-[50px] flex items-center justify-center rounded-[50%]" onclick="toggleTheme()">
+        <span class="sun hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="#bae6fd" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-purple-100">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
+              </svg>              
+        </span>
+        <span class="moon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="#0c4a6e" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-violet-600">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+              </svg>
+              
+        </span>
+    </button>
+    <div class="m-auto flex flex-col mt-3 justify-center items-center h-screen text-wrap">
+        <div class="border block max-w-[500px] bg-white dark:bg-indigo-950 p-5 rounded-[10px] shadow-sm dark:text-blue-300">
+            <div class="flex gap-7 justify-center text-xl">
+                <span>
+                    <input type="radio" name="duration" id="h45" value="h45" checked>
+                    <label for="">45</label>
+                </span>
+                <span>
+                    <input type="radio" name="duration" id="h40" value="h40">
+                    <label for="">40</label>
+                </span>
+                <span>
+                    <input type="radio" name="duration" id="h35" value="h35">
+                    <label for="">35</label>
+                </span>
+            </div>
+            <div class="">
+                <h1 class="text-2xl font-bold text-blue-300 dark:text-fuchsia-700"></h1>
+                <div class="info text-xl mb-2"></div>
+                <button onclick="refresh()" class="m-auto font-bold text-xl text-center bg-purple-600 w-[100%] p-2 rounded-[10px] hover:bg-purple-400 transition  hover:text-white dark:bg-purple-500 dark:hover:bg-purple-900 dark:hover:text-violet-400">Refresh</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="data_radio.js"></script>
+
+    <script>
+        function refresh() {
+            let selectedValue = document.querySelector('input[name="duration"]:checked').value 
+            console.log(selectedValue);
+            bellShedule=bellShedules[selectedValue]
+            console.log(bellShedule);
+            let currentTimeString = getCurrentTimeString()
+            document.querySelector('h1').innerHTML=currentTimeString
+            console.log(currentTimeString);
+            let current=bellShedule.find(obj=>obj.from<=currentTimeString && obj.to>=currentTimeString)
+            if(current) {
+                document.querySelector('.info').innerHTML=`Most a(z) ${current.id}.óra van és ${current.to}-ig tart.`
+            }else{
+                let next = bellShedule.find(obj=>obj.from>currentTimeString)
+                if(next)
+                document.querySelector('.info').innerHTML=`Most szünet van és a/az ${next.id}.óra következik, ${next.from}-tól.`
+                else
+                    document.querySelector('.info').innerHTML=`nincs információ...`
+            }
+        }
+
+        function getCurrentTimeString() {
+            let now = new Date()
+            let h = now.getHours().toString().padStart(2,'0')
+            let m = now.getMinutes(2,'0')
+
+            console.log(h,m);
+            return h + ':' + m
+
+        }
+
+        function toggleTheme() {
+            document.documentElement.classList.toggle("dark")
+            document.querySelector('.sun').classList.toggle('hidden')
+            document.querySelector('.moon').classList.toggle('hidden')
+
+        }
+    </script>
+</body>
+</html>
